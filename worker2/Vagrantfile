@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+   config.vm.define "worker2" do |worker2|
+     worker2.vm.box = "bento/ubuntu-20.04-arm64"
+     worker2.vm.hostname = "worker2"
+     worker2.vm.network "private_network", ip: "192.168.33.12"
+     config.vm.provider "parallels" do |vb|
+         vb.name = "worker2"
+      end
+      config.vm.provision "shell", inline: <<-SHELL
+            sudo su
+            sudo echo "worker2" > /etc/hostname
+            sudo echo "192.168.33.10  master" >> /etc/hosts
+            sudo echo "192.168.33.11  worker1" >> /etc/hosts
+            sudo echo "192.168.33.12  worker2" >> /etc/hosts
+       SHELL
+   end
+
+end
